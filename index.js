@@ -226,7 +226,7 @@ module.exports = (function(gulp) {
     {
         return function() {
             // Return the streams in one combined stream
-            return merge(styles, scripts, images);
+            return merge(styles()(), scripts()(), images()());
         };
     };
 
