@@ -1,6 +1,13 @@
 # gulp-tannwestlake
 Our custom Gulp tasks packaged as a gulp "plugin"
 
+### Add dependency to package.json
+```
+"dependencies": {
+    "gulp-tannwestlake": "tannwestlake/gulp-tannwestlake"
+}
+```
+
 ### Example usage
 ```js
 var gulp = require('gulp');
