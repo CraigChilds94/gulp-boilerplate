@@ -37,3 +37,5 @@ var options = {
 
 gulp.task('deploy', tw.deploy(options.deploy));
 ```
+
+You can find an example `gulpfile.js` and `package.json` in the [example](/example) folder. This example relies on the default options which are set in `index.js`.
