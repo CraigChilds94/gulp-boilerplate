@@ -30,6 +30,30 @@ module.exports = (function(gulp) {
         merge       = require('merge-stream')
         sequence    = require('run-sequence');
 
+
+    /**
+     * Handle option setting
+     *
+     * @param Object defaults  Default options
+     * @param Object supplied User supplied
+     */
+    function _setOptions(defaults, supplied)
+    {
+        if(supplied === undefined) return defaults;
+
+        for(key in supplied) {
+            var option = supplied[key];
+
+            if(option === undefined) {
+                options[key] = defaults[key];
+            } else if(typeof option === 'object') {
+                options[key] = _setOptions(defaults[key], supplied[key]);
+            }
+        }
+
+        return options;
+    }
+
     /**
      * Deployment task
      *
@@ -42,22 +66,11 @@ module.exports = (function(gulp) {
             files: ['**/*'],
             destination: '_deploy'
         };
-        
-        if(options === undefined) {
-            options = defaults;
-        } else {
 
-            if(options.files === undefined) {
-                options.files = defaults.files;
-            }
-
-            if(options.destination === undefined) {
-                options.destination = defaults.destination;
-            }
-        }
+        var realOptions = _setOptions(defaults, options);
 
         return function() {
-            gulp.src(options.files, {base: '.'}).pipe(gulp.dest(options.destination));
+            gulp.src(realOptions.files, {base: '.'}).pipe(gulp.dest(realOptions.destination));
         };
     };
 
