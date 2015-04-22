@@ -79,7 +79,8 @@ module.exports = (function(gulp) {
         standard: {
             notify: {message: 'Tasks complete'},
             watch: true,
-            clean: true
+            clean: true,
+            tasks: ['scripts', 'styles', 'images']
         },
 
         // Watch task settings
