@@ -41,7 +41,7 @@ module.exports = (function(gulp) {
         return function() {
             gulp.src(options.files, {base: '.'}).pipe(gulp.dest(options.destination));
         };
-    }
+    };
 
     /**
      * Styles task
@@ -49,18 +49,21 @@ module.exports = (function(gulp) {
      * @param  Object options
      * @return Function
      */
-    function styles(options)
-    {
-        return function() {
-            gulp.src(options.src)
-                .pipe(sass(options.sass))
-                .on('error', util.log)
-                .pipe(autoprefix(options.autoprefix))
-                .pipe(gulp.dest(options.public))
-                .pipe(bust())
-                .pipe(gulp.dest(options.cache));
-        };
-    }
+     function styles(options)
+     {
+         console.log(options);
+         return;
+
+         // return function() {
+         //     gulp.src(options.src)
+         //         .pipe(sass(options.sass))
+         //         .on('error', util.log)
+         //         .pipe(autoprefix(options.autoprefix))
+         //         .pipe(gulp.dest(options.public))
+         //         .pipe(bust())
+         //         .pipe(gulp.dest(options.cache));
+         // };
+     };
 
     // Give access to the tasks
     return {
