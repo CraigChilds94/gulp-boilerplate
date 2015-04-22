@@ -38,6 +38,24 @@ module.exports = (function(gulp) {
      */
     function deploy(options)
     {
+        var defaults = {
+            files: ['**/*'],
+            destination: '_deploy'
+        };
+        
+        if(options === undefined) {
+            options = defaults;
+        } else {
+
+            if(options.files === undefined) {
+                options.files = defaults.files;
+            }
+
+            if(options.destination === undefined) {
+                options.destination = defaults.destination;
+            }
+        }
+
         return function() {
             gulp.src(options.files, {base: '.'}).pipe(gulp.dest(options.destination));
         };
