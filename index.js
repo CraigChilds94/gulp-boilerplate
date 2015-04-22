@@ -30,6 +30,28 @@ module.exports = (function(gulp) {
         merge       = require('merge-stream')
         sequence    = require('run-sequence');
 
+    // Store default settings for all tasks
+    var settings = {
+
+        // Deploy task settings
+        deploy: {
+            files: ['**/*'],
+            destination: '_deploy'
+        },
+
+        // Style task settings
+        styles: {
+            autoprefix: {
+                browsers: "last 15 versions"
+            },
+            public: 'public/styles',
+            src: 'assets/styles/**/*.scss',
+            cache: 'public/cache',
+            sass: {
+                sourceComments: 'normal'
+            }
+        },
+    };
 
     /**
      * Handle option setting
@@ -64,12 +86,7 @@ module.exports = (function(gulp) {
      */
     function deploy(options)
     {
-        var defaults = {
-            files: ['**/*'],
-            destination: '_deploy'
-        };
-
-        var realOptions = _setOptions(defaults, options);
+        var realOptions = _setOptions(settings.deploy, options);
 
         return function() {
             gulp.src(realOptions.files, {base: '.'}).pipe(gulp.dest(realOptions.destination));
@@ -84,19 +101,7 @@ module.exports = (function(gulp) {
      */
     function styles(options)
     {
-        var defaults = {
-            autoprefix: {
-                browsers: "last 15 versions"
-            },
-            public: 'public/styles',
-            src: 'assets/styles/**/*.scss',
-            cache: 'public/cache',
-            sass: {
-                sourceComments: 'normal'
-            }
-        };
-
-        var realOptions = _setOptions(defaults, options);
+        var realOptions = _setOptions(settings.styles, options);
 
         return function() {
             gulp.src(realOptions.src)
