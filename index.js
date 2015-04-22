@@ -76,7 +76,7 @@ module.exports = (function(gulp) {
         },
 
         // Default task settings
-        default: {
+        standard: {
             notify: {message: 'Tasks complete'},
             watch: true,
             clean: true
@@ -85,8 +85,8 @@ module.exports = (function(gulp) {
         // Watch task settings
         watch: {
             tasks: [
-                {path: 'assets/styles/**/*.scss', tasks: ['styles']}
-                {path: 'assets/js/**/*.js', tasks: ['scripts']}
+                {path: 'assets/styles/**/*.scss', tasks: ['styles']},
+                {path: 'assets/js/**/*.js', tasks: ['scripts']},
                 {path: 'assets/img/**/*', tasks: ['images']}
             ]
         },
@@ -230,14 +230,14 @@ module.exports = (function(gulp) {
     };
 
     /**
-     * Default task
+     * Standard task
      *
      * @param  Object options
      * @return Function
      */
-    function default(options)
+    function standard(options)
     {
-        var realOptions = _setOptions(settings.default, options);
+        var realOptions = _setOptions(settings.standard, options);
 
         return function(callback) {
 
@@ -282,7 +282,7 @@ module.exports = (function(gulp) {
         clean: clean,
         production: production,
         deploy: deploy,
-        default: default,
+        standard: standard,
         watch: watch
     };
 
