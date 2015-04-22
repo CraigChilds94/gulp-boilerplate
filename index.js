@@ -52,12 +52,12 @@ module.exports = (function(gulp) {
     function styles(options)
     {
         return function() {
-            gulp.src(options.assets.files)
-                .pipe(sass({sourceComments: 'normal'}))
+            gulp.src(options.src)
+                .pipe(sass(options.sass))
                 .pipe(autoprefix(options.autoprefix))
-                .pipe(gulp.dest(options.public.styles))
+                .pipe(gulp.dest(options.public))
                 .pipe(bust())
-                .pipe(gulp.dest(options.hash.dir));
+                .pipe(gulp.dest(options.cache));
         };
     }
 
