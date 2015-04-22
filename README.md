@@ -9,6 +9,9 @@ Our custom Gulp tasks packaged as a gulp "plugin"
 ```
 
 ### Example usage
+
+Specify some options and pass them to the task function. Any present will overwrite the default options which can be found in `index.js` by the task name on the `settings` object. Example: `settings.deploy` would hold the default options for the deploy task. Below is an example of how to apply the `tw.deploy` task to your `gulpfile`.
+
 ```js
 var gulp = require('gulp');
 var tw   = require('gulp-tannwestlake')(gulp);
