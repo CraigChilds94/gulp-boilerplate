@@ -54,6 +54,7 @@ module.exports = (function(gulp) {
         return function() {
             gulp.src(options.src)
                 .pipe(sass(options.sass))
+                .on('error', util.log)
                 .pipe(autoprefix(options.autoprefix))
                 .pipe(gulp.dest(options.public))
                 .pipe(bust())
