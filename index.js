@@ -41,6 +41,8 @@ module.exports = (function(gulp) {
     {
         if(supplied === undefined) return defaults;
 
+        var options;
+
         for(key in supplied) {
             var option = supplied[key];
 
@@ -52,7 +54,7 @@ module.exports = (function(gulp) {
         }
 
         return options;
-    }
+    };
 
     /**
      * Deployment task
