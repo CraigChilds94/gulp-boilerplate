@@ -51,6 +51,45 @@ module.exports = (function(gulp) {
                 sourceComments: 'normal'
             }
         },
+
+        // Script task settings
+        scripts: {
+            src: 'assets/js/**/*.js',
+            filename: 'main.min.js',
+            public: 'public/js',
+            cache: 'public/cache'
+        },
+
+        // Images task settings
+        images: {
+            src: 'assets/img/**/*',
+            public: 'public/img'
+        },
+
+        // Clean task settings
+        clean: {
+            paths: [
+                'public/styles',
+                'public/js',
+                'public/img'
+            ],
+        },
+
+        // Default task settings
+        default: {
+            notify: {message: 'Tasks complete'},
+            watch: true,
+            clean: true
+        },
+
+        // Watch task settings
+        watch: {
+            tasks: [
+                {path: 'assets/styles/**/*.scss', tasks: ['styles']}
+                {path: 'assets/js/**/*.js', tasks: ['scripts']}
+                {path: 'assets/img/**/*', tasks: ['images']}
+            ]
+        },
     };
 
     /**
@@ -89,7 +128,7 @@ module.exports = (function(gulp) {
         var realOptions = _setOptions(settings.deploy, options);
 
         return function() {
-            gulp.src(realOptions.files, {base: '.'}).pipe(gulp.dest(realOptions.destination));
+            return gulp.src(realOptions.files, {base: '.'}).pipe(gulp.dest(realOptions.destination));
         };
     };
 
@@ -104,7 +143,7 @@ module.exports = (function(gulp) {
         var realOptions = _setOptions(settings.styles, options);
 
         return function() {
-            gulp.src(realOptions.src)
+            return gulp.src(realOptions.src)
                 .pipe(sass(realOptions.sass))
                 .on('error', util.log)
                 .pipe(autoprefix(realOptions.autoprefix))
@@ -114,10 +153,137 @@ module.exports = (function(gulp) {
         };
     };
 
+    /**
+     * Scripts task
+     *
+     * @param  Object options
+     * @return Function
+     */
+    function scripts(options)
+    {
+        var realOptions = _setOptions(settings.scripts, options);
+
+        return function() {
+            return gulp.src(realOptions.src)
+                .pipe(concat(realOptions.filename))
+                .pipe(gulp.dest(realOptions.public))
+                .pipe(bust())
+                .pipe(gulp.dest(realOptions.cache));
+        };
+    };
+
+    /**
+     * Images task
+     *
+     * @param  Object options
+     * @return Function
+     */
+    function images(options)
+    {
+        var realOptions = _setOptions(settings.images, options);
+
+        return function() {
+            return gulp.src(realOptions.src)
+                .pipe(gulp.dest(realOptions.public));
+        };
+    };
+
+    /**
+     * Clear task
+     *
+     * @return Function
+     */
+    function clear()
+    {
+        return function(done) {
+            return cache.clearAll(done);
+        };
+    };
+
+    /**
+     * Clean task
+     *
+     * @param  Object options
+     * @return Function
+     */
+    function clean(options)
+    {
+        var realOptions = _setOptions(settings.clean, options);
+
+        return function(cb) {
+            return del(realOptions.paths, cb);
+        };
+    };
+
+    /**
+     * Production task
+     *
+     * @param  Object options
+     * @return Function
+     */
+    function production()
+    {
+        return function() {
+            // Return the streams in one combined stream
+            return merge(styles, scripts, images);
+        };
+    };
+
+    /**
+     * Default task
+     *
+     * @param  Object options
+     * @return Function
+     */
+    function default(options)
+    {
+        var realOptions = _setOptions(settings.default, options);
+
+        return function(callback) {
+
+            if(realOptions.clean === true && realOptions.watch === true) {
+                sequence('clean', realOptions.tasks, 'watch', callback);
+            } else if(realOptions.clean === true && realOptions.watch === false) {
+                sequence('clean', realOptions.tasks, callback);
+            } else if(realOptions.clean === false && realOptions.watch === true) {
+                sequence(realOptions.tasks, 'watch', callback);
+            } else {
+                sequence(realOptions.tasks, callback);
+            }
+
+            notifier.notify(realOptions.notify);
+        };
+    };
+
+    /**
+     * Watch task
+     *
+     * @param  Object options
+     * @return Function
+     */
+    function watch(options)
+    {
+        var realOptions = _setOptions(settings.watch, options);
+
+        return function() {
+            for(index in realOptions.tasks) {
+                var task = realOptions.tasks[index];
+                gulp.watch(task.path, task.tasks);
+            }
+        };
+    };
+
     // Give access to the tasks
     return {
         styles: styles,
-        deploy: deploy
+        scripts: scripts,
+        images: images,
+        clear: clear,
+        clean: clean,
+        production: production,
+        deploy: deploy,
+        default: default,
+        watch: watch
     };
 
 });
