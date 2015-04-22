@@ -41,7 +41,7 @@ module.exports = (function(gulp) {
         return function() {
             gulp.src(options.files, {base: '.'}).pipe(gulp.dest(options.destination));
         };
-    }
+    };
 
     /**
      * Styles task
@@ -60,7 +60,7 @@ module.exports = (function(gulp) {
                 .pipe(bust())
                 .pipe(gulp.dest(options.cache));
         };
-    }
+    };
 
     // Give access to the tasks
     return {
