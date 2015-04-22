@@ -41,13 +41,13 @@ module.exports = (function(gulp) {
     {
         if(supplied === undefined) return defaults;
 
-        var options;
+        var options = defaults;
 
         for(key in supplied) {
             var option = supplied[key];
 
-            if(option === undefined) {
-                options[key] = defaults[key];
+            if(option !== undefined) {
+                options[key] = supplied[key];
             } else if(typeof option === 'object') {
                 options[key] = _setOptions(defaults[key], supplied[key]);
             }
@@ -84,14 +84,28 @@ module.exports = (function(gulp) {
      */
     function styles(options)
     {
+        var defaults = {
+            autoprefix: {
+                browsers: "last 15 versions"
+            },
+            public: 'public/styles',
+            src: 'assets/styles/**/*.scss',
+            cache: 'public/cache',
+            sass: {
+                sourceComments: 'normal'
+            }
+        };
+
+        var realOptions = _setOptions(defaults, options);
+
         return function() {
-            gulp.src(options.src)
-                .pipe(sass(options.sass))
+            gulp.src(realOptions.src)
+                .pipe(sass(realOptions.sass))
                 .on('error', util.log)
-                .pipe(autoprefix(options.autoprefix))
-                .pipe(gulp.dest(options.public))
+                .pipe(autoprefix(realOptions.autoprefix))
+                .pipe(gulp.dest(realOptions.public))
                 .pipe(bust())
-                .pipe(gulp.dest(options.cache));
+                .pipe(gulp.dest(realOptions.cache));
         };
     };
 
