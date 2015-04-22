@@ -43,8 +43,27 @@ module.exports = (function(gulp) {
         };
     }
 
+    /**
+     * Styles task
+     *
+     * @param  Object options
+     * @return Function
+     */
+    function styles(options)
+    {
+        return function() {
+            gulp.src(options.assets.files)
+                .pipe(sass({sourceComments: 'normal'}))
+                .pipe(autoprefix(options.autoprefix))
+                .pipe(gulp.dest(options.public.styles))
+                .pipe(bust())
+                .pipe(gulp.dest(options.hash.dir));
+        };
+    }
+
     // Give access to the tasks
     return {
+        styles: styles,
         deploy: deploy
     };
 
