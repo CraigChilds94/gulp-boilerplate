@@ -161,7 +161,6 @@ module.exports = (function(gulp) {
             return gulp.src(realOptions.src)
                 .pipe(sass(realOptions.sass))
                 .on('error', _logErrors)
-                .on('error', notify.onError('Error: <%= error.message %>'))
                 .pipe(autoprefix(realOptions.autoprefix))
                 .pipe(gulp.dest(realOptions.public))
                 .pipe(bust())
