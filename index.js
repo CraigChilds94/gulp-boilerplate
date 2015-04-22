@@ -94,6 +94,20 @@ module.exports = (function(gulp) {
     };
 
     /**
+     * Handle errors
+     *
+     * @param error
+     */
+    var _logErrors = function(error)
+    {
+        console.log("An error has occured:");
+        console.log(error.toString());
+
+        util.log(error);
+        this.emit('end');
+    };
+
+    /**
      * Handle option setting
      *
      * @param Object defaults  Default options
@@ -146,7 +160,7 @@ module.exports = (function(gulp) {
         return function() {
             return gulp.src(realOptions.src)
                 .pipe(sass(realOptions.sass))
-                .on('error', util.log)
+                .on('error', _logErrors)
                 .pipe(autoprefix(realOptions.autoprefix))
                 .pipe(gulp.dest(realOptions.public))
                 .pipe(bust())
