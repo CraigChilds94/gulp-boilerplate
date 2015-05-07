@@ -250,11 +250,20 @@ module.exports = (function(gulp) {
      * @param  Object customOptions
      * @return Function
      */
-    function production()
+    function production(customOptions)
     {
+        var options = {
+            styles: _setOptions(globalSettings.styles, customOptions.styles),
+            scripts: _setOptions(globalSettings.scripts, customOptions.scripts),
+            images: _setOptions(globalSettings.images, customOptions.images)
+        };
+
         return function() {
+            var stylesOptions = _setOptions(options.styles, {minify: true});
+            var scriptsOptions = _setOptions(options.scripts, {strip: true, uglify: true});
+
             // Return the streams in one combined stream
-            return merge(styles({minify: true})(), scripts({strip: true, uglify: true})(), images()());
+            return merge(styles(stylesOptions)(), scripts(scriptsOptions)(), images(options.images)());
         };
     };
 
