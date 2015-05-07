@@ -1,9 +1,9 @@
 {
-  "name": "gulp-tannwestlake",
-  "description": "Official tw gulp setup",
+  "name": "gulp-boilerplate",
+  "description": "Official boilerplate gulp setup",
   "repository": {
       "type": "git",
-      "url": "https://github.com/tannwestlake/gulp-tannwestlake"
+      "url": "https://github.com/CraigChilds94/gulp-boilerplate"
   },
   "version": "0.0.1",
   "private": true,
