@@ -16,9 +16,6 @@ module.exports = (function(gulp) {
         concat      = require('gulp-concat'),
 
         // Images
-        png         = require('imagemin-optipng'),
-        jpg         = require('imagemin-jpegtran'),
-        gif         = require('imagemin-gifsicle'),
         cache       = require('gulp-cache'),
 
         // Other
