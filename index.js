@@ -187,11 +187,11 @@ module.exports = (function(gulp) {
         return function() {
             var scripts = gulp.src(options.src).pipe(concat(options.filename));
 
-            if(options.strip === true) {
+            if(options.strip == true) {
                 scripts = scripts.pipe(strip());
             }
 
-            if(options.uglify === true) {
+            if(options.uglify == true) {
                 scripts = scripts.pipe(uglify());
             }
 
