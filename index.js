@@ -161,7 +161,7 @@ module.exports = (function(gulp) {
         var options = _setOptions(globalSettings.styles, customOptions);
 
         return function() {
-            var styles gulp.src(options.src)
+            var styles = gulp.src(options.src)
                 .pipe(sass(options.sass))
                 .on('error', _logErrors)
                 .on('error', notify.onError('Error: <%= error.message %>'))
