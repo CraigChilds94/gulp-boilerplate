@@ -5,7 +5,7 @@
       "type": "git",
       "url": "https://github.com/CraigChilds94/gulp-boilerplate"
   },
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
     "del": "^0.1.3",
