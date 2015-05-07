@@ -2,6 +2,6 @@
   "name": "project",
   "description": "Official dependencies for the project",
   "dependencies": {
-      "gulp-tannwestlake": "tannwestlake/gulp-tannwestlake"
+      "gulp-boilerplate": "CraigChilds94/gulp-boilerplate"
   }
 }

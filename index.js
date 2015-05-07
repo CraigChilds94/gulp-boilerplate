@@ -1,5 +1,5 @@
 /**
- * gulp-tannwestlake
+ * gulp-boilerplate
  * @param Gulp gulp
  */
 module.exports = (function(gulp) {

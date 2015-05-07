@@ -1,29 +1,29 @@
 var gulp = require('gulp');
-var tw   = require('gulp-tannwestlake')(gulp);
+var boilerplate   = require('gulp-boilerplate')(gulp);
 
 // Styles task
-gulp.task('styles', tw.styles());
+gulp.task('styles', boilerplate.styles());
 
 // Scripts task
-gulp.task('scripts', tw.scripts());
+gulp.task('scripts', boilerplate.scripts());
 
 // Images task
-gulp.task('images', tw.images());
+gulp.task('images', boilerplate.images());
 
 // Clean task
-gulp.task('clean', tw.clean());
+gulp.task('clean', boilerplate.clean());
 
 // Clear task
-gulp.task('clear', tw.clear());
+gulp.task('clear', boilerplate.clear());
 
 // Watch task
-gulp.task('watch', tw.watch());
+gulp.task('watch', boilerplate.watch());
 
 // Default task
-gulp.task('default', tw.standard());
+gulp.task('default', boilerplate.standard());
 
 // Production task
-gulp.task('production', ['clean'], tw.production());
+gulp.task('production', ['clean'], boilerplate.production());
 
 // Deployment task
-gulp.task('deploy', ['production'], tw.deploy());
+gulp.task('deploy', ['production'], boilerplate.deploy());
