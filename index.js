@@ -30,16 +30,16 @@ module.exports = (function(gulp) {
         merge       = require('merge-stream')
         sequence    = require('run-sequence');
 
-    // Store default settings for all tasks
-    var settings = {
+    // Store default globalSettings for all tasks
+    var globalSettings = {
 
-        // Deploy task settings
+        // Deploy task globalSettings
         deploy: {
             files: ['**/*'],
             destination: '_deploy'
         },
 
-        // Style task settings
+        // Style task globalSettings
         styles: {
             autoprefix: {
                 browsers: "last 15 versions"
@@ -49,24 +49,27 @@ module.exports = (function(gulp) {
             cache: 'public/cache',
             sass: {
                 sourceComments: 'normal'
-            }
+            },
+            minify: false
         },
 
-        // Script task settings
+        // Script task globalSettings
         scripts: {
             src: 'assets/js/**/*.js',
             filename: 'main.min.js',
             public: 'public/js',
-            cache: 'public/cache'
+            cache: 'public/cache',
+            uglify: false,
+            strip: false
         },
 
-        // Images task settings
+        // Images task globalSettings
         images: {
             src: 'assets/img/**/*',
             public: 'public/img'
         },
 
-        // Clean task settings
+        // Clean task globalSettings
         clean: {
             paths: [
                 'public/styles',
@@ -75,7 +78,7 @@ module.exports = (function(gulp) {
             ],
         },
 
-        // Default task settings
+        // Default task globalSettings
         standard: {
             notify: {message: 'Tasks complete'},
             watch: true,
@@ -83,7 +86,7 @@ module.exports = (function(gulp) {
             tasks: ['scripts', 'styles', 'images']
         },
 
-        // Watch task settings
+        // Watch task globalSettings
         watch: {
             tasks: [
                 {path: 'assets/styles/**/*.scss', tasks: ['styles']},
@@ -135,72 +138,85 @@ module.exports = (function(gulp) {
     /**
      * Deployment task
      *
-     * @param  Object options
+     * @param  Object customOptions
      * @return Function
      */
-    function deploy(options)
+    function deploy(customOptions)
     {
-        var realOptions = _setOptions(settings.deploy, options);
+        var options = _setOptions(globalSettings.deploy, customOptions);
 
         return function() {
-            return gulp.src(realOptions.files, {base: '.'}).pipe(gulp.dest(realOptions.destination));
+            return gulp.src(options.files, {base: '.'}).pipe(gulp.dest(options.destination));
         };
     };
 
     /**
      * Styles task
      *
-     * @param  Object options
+     * @param  Object customOptions
      * @return Function
      */
-    function styles(options)
+    function styles(customOptions)
     {
-        var realOptions = _setOptions(settings.styles, options);
+        var options = _setOptions(globalSettings.styles, customOptions);
 
         return function() {
-            return gulp.src(realOptions.src)
-                .pipe(sass(realOptions.sass))
+            var styles gulp.src(options.src)
+                .pipe(sass(options.sass))
                 .on('error', _logErrors)
                 .on('error', notify.onError('Error: <%= error.message %>'))
-                .pipe(autoprefix(realOptions.autoprefix))
-                .pipe(gulp.dest(realOptions.public))
+                .pipe(autoprefix(options.autoprefix));
+
+            if(options.minify === true) {
+                styles = styles.pipe(minify());
+            }
+
+            return styles.pipe(gulp.dest(options.public))
                 .pipe(bust())
-                .pipe(gulp.dest(realOptions.cache));
+                .pipe(gulp.dest(options.cache));
         };
     };
 
     /**
      * Scripts task
      *
-     * @param  Object options
+     * @param  Object customOptions
      * @return Function
      */
-    function scripts(options)
+    function scripts(customOptions)
     {
-        var realOptions = _setOptions(settings.scripts, options);
+        var options = _setOptions(globalSettings.scripts, customOptions);
 
         return function() {
-            return gulp.src(realOptions.src)
-                .pipe(concat(realOptions.filename))
-                .pipe(gulp.dest(realOptions.public))
+            var scripts = gulp.src(options.src).pipe(concat(options.filename));
+
+            if(options.strip === true) {
+                scripts = scripts.pipe(strip());
+            }
+
+            if(options.uglify === true) {
+                scripts = scripts.pipe(uglify());
+            }
+
+            return scripts.pipe(gulp.dest(options.public))
                 .pipe(bust())
-                .pipe(gulp.dest(realOptions.cache));
+                .pipe(gulp.dest(options.cache));
         };
     };
 
     /**
      * Images task
      *
-     * @param  Object options
+     * @param  Object customOptions
      * @return Function
      */
-    function images(options)
+    function images(customOptions)
     {
-        var realOptions = _setOptions(settings.images, options);
+        var options = _setOptions(globalSettings.images, customOptions);
 
         return function() {
-            return gulp.src(realOptions.src)
-                .pipe(gulp.dest(realOptions.public));
+            return gulp.src(options.src)
+                .pipe(gulp.dest(options.public));
         };
     };
 
@@ -219,71 +235,71 @@ module.exports = (function(gulp) {
     /**
      * Clean task
      *
-     * @param  Object options
+     * @param  Object customOptions
      * @return Function
      */
-    function clean(options)
+    function clean(customOptions)
     {
-        var realOptions = _setOptions(settings.clean, options);
+        var options = _setOptions(globalSettings.clean, customOptions);
 
         return function(cb) {
-            return del(realOptions.paths, cb);
+            return del(options.paths, cb);
         };
     };
 
     /**
      * Production task
      *
-     * @param  Object options
+     * @param  Object customOptions
      * @return Function
      */
     function production()
     {
         return function() {
             // Return the streams in one combined stream
-            return merge(styles()(), scripts()(), images()());
+            return merge(styles({minify: true})(), scripts({strip: true, uglify: true})(), images()());
         };
     };
 
     /**
      * Standard task
      *
-     * @param  Object options
+     * @param  Object customOptions
      * @return Function
      */
-    function standard(options)
+    function standard(customOptions)
     {
-        var realOptions = _setOptions(settings.standard, options);
+        var options = _setOptions(globalSettings.standard, customOptions);
 
         return function(callback) {
 
-            if(realOptions.clean === true && realOptions.watch === true) {
-                sequence('clean', realOptions.tasks, 'watch', callback);
-            } else if(realOptions.clean === true && realOptions.watch === false) {
-                sequence('clean', realOptions.tasks, callback);
-            } else if(realOptions.clean === false && realOptions.watch === true) {
-                sequence(realOptions.tasks, 'watch', callback);
+            if(options.clean === true && options.watch === true) {
+                sequence('clean', options.tasks, 'watch', callback);
+            } else if(options.clean === true && options.watch === false) {
+                sequence('clean', options.tasks, callback);
+            } else if(options.clean === false && options.watch === true) {
+                sequence(options.tasks, 'watch', callback);
             } else {
-                sequence(realOptions.tasks, callback);
+                sequence(options.tasks, callback);
             }
 
-            notifier.notify(realOptions.notify);
+            notifier.notify(options.notify);
         };
     };
 
     /**
      * Watch task
      *
-     * @param  Object options
+     * @param  Object customOptions
      * @return Function
      */
-    function watch(options)
+    function watch(customOptions)
     {
-        var realOptions = _setOptions(settings.watch, options);
+        var options = _setOptions(globalSettings.watch, customOptions);
 
         return function() {
-            for(index in realOptions.tasks) {
-                var task = realOptions.tasks[index];
+            for(index in options.tasks) {
+                var task = options.tasks[index];
                 gulp.watch(task.path, task.tasks);
             }
         };
