@@ -4,6 +4,7 @@ Some custom Gulp tasks packaged as a gulp "plugin"
 ### Add dependency to package.json
 ```
 "dependencies": {
+    "gulp": "^3.8.10",
     "gulp-boilerplate": "CraigChilds94/gulp-boilerplate"
 }
 ```
