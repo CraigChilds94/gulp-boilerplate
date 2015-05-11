@@ -252,11 +252,16 @@ module.exports = (function(gulp) {
      */
     function production(customOptions)
     {
-        var options = {
-            styles: _setOptions(globalSettings.styles, customOptions.styles),
-            scripts: _setOptions(globalSettings.scripts, customOptions.scripts),
-            images: _setOptions(globalSettings.images, customOptions.images)
-        };
+
+        var options = globalSettings;
+
+        if(customOptions != 'undefined' && customOptions.styles != 'undefined' && customOptions.scripts != 'undefined' && customOptions.images!= 'undefined') {
+            options = {
+                styles: _setOptions(globalSettings.styles, customOptions.styles),
+                scripts: _setOptions(globalSettings.scripts, customOptions.scripts),
+                images: _setOptions(globalSettings.images, customOptions.images)
+            };
+        }
 
         return function() {
             var stylesOptions = _setOptions(options.styles, {minify: true});
