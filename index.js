@@ -252,10 +252,10 @@ module.exports = (function(gulp) {
      */
     function production(customOptions)
     {
-
         var options = globalSettings;
+        var correct = customOptions.hasOwnProperty('styles') && customOptions.hasOwnProperty('scripts') && customOptions.hasOwnProperty('images');
 
-        if(customOptions != 'undefined' && customOptions.styles != 'undefined' && customOptions.scripts != 'undefined' && customOptions.images!= 'undefined') {
+        if(customOptions != 'undefined' && correct) {
             options = {
                 styles: _setOptions(globalSettings.styles, customOptions.styles),
                 scripts: _setOptions(globalSettings.scripts, customOptions.scripts),
