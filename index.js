@@ -254,7 +254,7 @@ module.exports = (function(gulp) {
     {
         var options = globalSettings;
 
-        if(customOptions === "undefined") {
+        if(customOptions !== "undefined") {
             var correct = customOptions.hasOwnProperty('styles') && customOptions.hasOwnProperty('scripts') && customOptions.hasOwnProperty('images');
             if(correct) {
                 options = {
