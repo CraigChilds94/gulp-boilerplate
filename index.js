@@ -253,14 +253,16 @@ module.exports = (function(gulp) {
     function production(customOptions)
     {
         var options = globalSettings;
-        var correct = customOptions.hasOwnProperty('styles') && customOptions.hasOwnProperty('scripts') && customOptions.hasOwnProperty('images');
 
-        if(customOptions != 'undefined' && correct) {
-            options = {
-                styles: _setOptions(globalSettings.styles, customOptions.styles),
-                scripts: _setOptions(globalSettings.scripts, customOptions.scripts),
-                images: _setOptions(globalSettings.images, customOptions.images)
-            };
+        if(customOptions != 'undefined') {
+            var correct = customOptions.hasOwnProperty('styles') && customOptions.hasOwnProperty('scripts') && customOptions.hasOwnProperty('images');
+            if(correct) {
+                options = {
+                    styles: _setOptions(globalSettings.styles, customOptions.styles),
+                    scripts: _setOptions(globalSettings.scripts, customOptions.scripts),
+                    images: _setOptions(globalSettings.images, customOptions.images)
+                };
+            }
         }
 
         return function() {
