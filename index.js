@@ -7,7 +7,8 @@ module.exports = (function(gulp) {
     // Include our dependencies, starting with style stuff
     var sass        = require('gulp-sass'),
         autoprefix  = require('gulp-autoprefixer'),
-        minify      = require('gulp-minify-css'),
+        minify      = require('gulp-clean-css'),
+        sourcemaps  = require('gulp-sourcemaps'),
         rename      = require('gulp-rename'),
 
         // Scripts
@@ -39,7 +40,7 @@ module.exports = (function(gulp) {
         // Style task globalSettings
         styles: {
             autoprefix: {
-                browsers: "last 15 versions"
+                browsers: ["last 10 versions"],
             },
             public: 'public/styles',
             src: 'assets/styles/**/*.scss',
@@ -165,7 +166,12 @@ module.exports = (function(gulp) {
                 .pipe(autoprefix(options.autoprefix));
 
             if(options.minify === true) {
-                styles = styles.pipe(minify());
+                styles = styles.pipe(sourcemaps.init())
+                    .pipe(minify({debug: true}, function(details) {
+                        console.log(details.name + ': ' + details.stats.originalSize);
+                        console.log(details.name + ': ' + details.stats.minifiedSize);
+                    }))
+                    .pipe(sourcemaps.write());
             }
 
             return styles.pipe(gulp.dest(options.public))
